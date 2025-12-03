@@ -4,9 +4,14 @@ from .models import Room, Topic, User
 from .forms import RoomForm 
 from django.contrib import messages # for flash messages
 from django.contrib.auth import authenticate, login, logout # for user authentication
+from django.contrib.auth.decorators import login_required # to restrict access to logged-in users
+from django.http import HttpResponse
 
 # Create your views here.
 def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -50,6 +55,7 @@ def room(request, pk):
     context = {"room": room}
     return render(request, "base/room.html", context)
 
+@login_required(login_url="login") # if not logged in when I try to create a new room it redirects me to login page
 def createRoom(request):
     form = RoomForm()
     if request.method == "POST":
@@ -61,9 +67,13 @@ def createRoom(request):
     context = {'form': form}
     return render(request, "base/room_form.html", context)
 
+@login_required(login_url="login") 
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
+    
+    if request.user != room.host:
+        return HttpResponse("You are not allowed here")
     
     if request.method == "POST":
         form = RoomForm(request.POST, instance=room)
@@ -74,8 +84,13 @@ def updateRoom(request, pk):
     context = {'form': form}
     return render(request, "base/room_form.html", context)
 
+@login_required(login_url="login") 
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
+    
+    if request.user != room.host:
+        return HttpResponse("You are not allowed here")
+    
     if request.method == "POST":
         room.delete()
         return redirect("home")

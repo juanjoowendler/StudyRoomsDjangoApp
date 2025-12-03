@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
-from django.db.models import Q
-from .models import Room, Topic, User
-from .forms import RoomForm
+from django.shortcuts import render, redirect # for rendering templates and redirecting
+from django.db.models import Q # for complex queries
+from .models import Room, Topic, User 
+from .forms import RoomForm 
 from django.contrib import messages # for flash messages
+from django.contrib.auth import authenticate, login, logout # for user authentication
 
 # Create your views here.
 def loginPage(request):
@@ -14,9 +15,15 @@ def loginPage(request):
             user = User.objects.get(username=username) 
         except User.DoesNotExist:
             messages.error(request, "User does not exist")
-            return redirect("login")
         
-    
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "Username or password is incorrect")
+
+        
     context = {}
     return render(request, "base/login_register.html", context)
 

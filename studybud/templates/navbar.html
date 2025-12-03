@@ -2,4 +2,9 @@
     <h1>StudyBud</h1>
 </a>
 
+<form method="GET" action="{% url 'home' %}">
+    <input type="text" name="q" placeholder="Search topics..." value="{{ request.GET.topic }}">
+    <button type="submit">Search</button>
+</form>
+
 <hr>

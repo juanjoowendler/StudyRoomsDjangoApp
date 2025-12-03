@@ -1,4 +1,4 @@
-Useful links: 
+Useful links:
 
 * Django documentation: https://www.djangoproject.com/
 * Django documentation - User Model: https://docs.djangoproject.com/en/5.2/ref/contrib/auth/
@@ -11,3 +11,7 @@ Used commands:
 * python manage.py createsuperuser (create user and password to access the Django administration panel)
 * django-admin startproject `<project_name>`
 * django-admin startproject `<app_name>`
+
+Django logic:
+
+User → URLs → Views → Models → DB → Templates → Response

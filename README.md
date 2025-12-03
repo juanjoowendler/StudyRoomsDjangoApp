@@ -1,7 +1,8 @@
 Useful links:
 
 * Django documentation: https://www.djangoproject.com/
-* Django documentation - User Model: https://docs.djangoproject.com/en/5.2/ref/contrib/auth/
+* DjDoc - User Model: https://docs.djangoproject.com/en/5.2/ref/contrib/auth/
+* DjDoc - Flash messages: https://docs.djangoproject.com/en/5.2/ref/contrib/messages/
 
 Used commands:
 

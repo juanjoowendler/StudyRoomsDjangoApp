@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User # User is a built-in model in Django
 
 # Create your models here.
 class Topic(models.Model):

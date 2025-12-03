@@ -1,23 +1,21 @@
 {% extends "main.html" %} <!-- Template inheritance -->>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    {% block content %} 
-       <h1>Home Page</h1>
-       <div>
-            <h2>Available Study Rooms:</h2>
-            <ul>
-            {% for room in rooms %}
-                    <a href="{% url 'room' room.id %}"><li>{{room.id}} {{ room.name }}</li></a>
-            {% endfor %}
-            </ul>
-       </div>
-    {% endblock %}
-</body>
-</html>
+
+{% block content %} 
+    <h1>Home Page</h1>
+    <h2>Available Study Rooms:</h2>
+    <div>
+        <a href="{% url 'create-room' %}">Create new room</a>
+        {% for room in rooms %}
+            <div>
+                <a href="{% url 'update-room' room.id %}">Edit</a> 
+                <a href="{% url 'delete-room' room.id %}">Delete</a> 
+                <span>@{{room.host.username}}</span>
+                <a href="{% url 'room' room.id %}"><li>{{room.id}} {{ room.name }}</li></a>
+                <small>{{room.topic.name}}</small>
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

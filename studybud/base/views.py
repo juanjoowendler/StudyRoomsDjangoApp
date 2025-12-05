@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect # for rendering templates and redirecting
 from django.db.models import Q # for complex queries
-from .models import Room, Topic, User 
+from .models import Room, Topic, User, Message
 from .forms import RoomForm 
 from django.contrib import messages # for flash messages
 from django.contrib.auth import authenticate, login, logout # for user authentication
@@ -74,7 +74,21 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    context = {"room": room}
+    room_messages = room.message_set.all().order_by('-created') # sql: SELECT * FROM message WHERE room_id=pk ORDER BY created DESC
+    participants = room.participants.all()
+    
+    if request.method == "POST":
+        Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get("body")
+        )
+        
+        room.participants.add(request.user) # add the user to participants if they post a message
+        return redirect("room", pk=room.id) # because it is a POST request, we redirect to avoid resubmission on refresh
+    
+    
+    context = {"room": room, "room_messages": room_messages, "participants": participants}
     return render(request, "base/room.html", context)
 
 @login_required(login_url="login") # if not logged in when I try to create a new room it redirects me to login page
@@ -118,6 +132,21 @@ def deleteRoom(request, pk):
         return redirect("home")
     
     return render(request, "base/delete.html", {"obj": room})
+
+
+@login_required(login_url="login") 
+def deleteMessage(request, pk):
+    message = Message.objects.get(id=pk)
+    
+    if request.user != message.user:
+        return HttpResponse("You are not allowed here")
+    
+    if request.method == "POST":
+        message.delete()
+        return redirect("home") 
+    
+    return render(request, "base/delete.html", {"obj": message})
+
 
 
 

@@ -150,6 +150,16 @@ def deleteMessage(request, pk):
     
     return render(request, "base/delete.html", {"obj": message})
 
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    topics = Topic.objects.all()
+    room_messages = user.message_set.all()  # sql: SELECT * FROM message WHERE user_id=pk 
+    rooms = user.room_set.all() 
+    
+    context = {"user": user, "topics": topics, "room_messages": room_messages, "rooms": rooms}
+    return render(request, "base/profile.html", context)
+    
+
 
 
 

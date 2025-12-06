@@ -119,7 +119,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+# Use an absolute URL path for STATIC_URL so templates generate root-relative
+# static asset links (prevents broken relative paths on nested routes).
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR.parent / "static"]  # static files like css, js, images etc. (project-level `static` folder)
+# STATIC_URL = 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

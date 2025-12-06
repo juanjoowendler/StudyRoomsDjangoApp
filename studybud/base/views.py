@@ -100,7 +100,9 @@ def createRoom(request):
     if request.method == "POST":
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False) # commit=False to modify before saving
+            room.host = request.user # set the host to the logged-in user
+            room.save()
             return redirect("home")
         
     context = {'form': form}
